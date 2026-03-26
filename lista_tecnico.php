@@ -18,13 +18,7 @@ if (isset($_GET['enviar'])) {
 }
 $resultado = $conexion->query("SELECT * FROM tecnicos ORDER BY id DESC");
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Técnicos</title>
-</head>
-<body>
-    <?php include "menu.html"; ?>
+    <?php include "header.php"; ?>
     <br><hr><br>
 
     <h2>Lista de Técnicos</h2>
@@ -64,7 +58,7 @@ $resultado = $conexion->query("SELECT * FROM tecnicos ORDER BY id DESC");
         
     </table>
 
-</body>
+ <?php include "footer.html"; ?>
 <script>
     function eliminarTecnico(id) {
         if (confirm("¿Está seguro de eliminar el técnico?")) {

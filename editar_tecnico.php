@@ -41,12 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Editar Técnico</title>
-</head>
-<body>
+<?php include "header.php"; ?>
     <?php include "menu.html"; ?>
     <h2>Editar Técnico</h2>
     <form action="" method="POST">
@@ -62,5 +57,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         <input type="submit" value="Guardar Cambios">
     </form>
-</body>
-</html>
+<?php include "footer.html"; ?>

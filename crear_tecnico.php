@@ -18,6 +18,7 @@ if (isset($_GET['enviar'])) {
 }
 $resultado = $conexion->query("SELECT * FROM tecnicos ORDER BY id DESC");
 ?>
+<?php include "header.php"; ?>
 <form action="" method="GET">
         Nombre: <input type="text" name="nombre" required><br><br>
         Apellido: <input type="text" name="apellido" required><br><br>
@@ -31,3 +32,4 @@ $resultado = $conexion->query("SELECT * FROM tecnicos ORDER BY id DESC");
             <br><br>
         <input type="submit" name="enviar" value="Guardar Técnico">
     </form>
+    <?php include "footer.html"; ?>
