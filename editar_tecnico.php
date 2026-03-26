@@ -1,26 +1,43 @@
-<php
-
+<?php
 include "conexion.php";
 
+// 1. Validar que el ID exista al cargar la página
 if (!isset($_GET["id"])) {
     die("No se proporcionó un ID válido.");
 }
 
 $id = $_GET["id"];
 
-$sql = "SELECT * FROM tecnicos WHERE id = $id";
-$stmt = $pdo->query($sql);
-$tecnico = $stmt->fetch();
+// 2. Obtener los datos actuales del técnico (Usando MySQLi simple)
+$resultado = $conexion->query("SELECT * FROM tecnicos WHERE id = $id");
+$tecnico = $resultado->fetch_assoc();
 
-if (isset($_GET["enviar"])) {
-    $nombre = $_GET["nombre"];
-    $apellido = $_GET["apellido"];
-    $cedula = $_GET["cedula"];
-    $cargo = $_GET["cargo"];
-    $sql = "UPDATE tecnicos SET nombre = '$nombre', apellido = '$apellido', cedula = '$cedula', cargo = '$cargo' WHERE id = $id";
-    $pdo->exec($sql);
+if (!$tecnico) { 
+    echo "ID buscado: " . $id;
+    die(" Técnico no encontrado en la base de datos.");
+}
 
-    header("Location: index.php");
+// 3. Procesar la actualización al recibir el POST
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombre = $_POST["nombre"];
+    $apellido = $_POST["apellido"];
+    $cedula = $_POST["cedula"];
+    $cargo = $_POST["cargo"];
+
+    // Actualizar los datos con una consulta simple
+    $sql_update = "UPDATE tecnicos SET 
+                   nombre = '$nombre', 
+                   apellido = '$apellido', 
+                   cedula = '$cedula', 
+                   cargo = '$cargo' 
+                   WHERE id = $id";
+
+    if ($conexion->query($sql_update) === TRUE) {
+        header("Location: index.php");
+        exit();
+    } else {
+        die("Error al actualizar: " . $conexion->error);
+    }
 }
 ?>
 
@@ -30,13 +47,20 @@ if (isset($_GET["enviar"])) {
     <title>Editar Técnico</title>
 </head>
 <body>
+    <?php include "menu.html"; ?>
     <h2>Editar Técnico</h2>
-    <form action="" method="GET">
-        Nombre: <input type="text" name="nombre" value="<?php echo $tecnico['nombre']; ?>" required><br><br>
-        Apellido: <input type="text" name="apellido" value="<?php echo $tecnico['apellido']; ?>" required><br><br>
+    <form action="" method="POST">
+        Nombre: <input type="text" name="nombre" value="<?php echo htmlspecialchars($tecnico['nombre']); ?>" required><br><br>
+        Apellido: <input type="text" name="apellido" value="<?php echo htmlspecialchars($tecnico['apellido']); ?>" required><br><br>
         Cédula: <input type="number" name="cedula" value="<?php echo $tecnico['cedula']; ?>" required><br><br>
-        Cargo: <input type="text" name="cargo" value="<?php echo $tecnico['cargo']; ?>" required><br><br>
-        <input type="submit" name="enviar" value="Guardar Cambios">
+        Cargo: <select name="cargo" id="">
+            <option value="">Seleccione un cargo</option>
+            <option value="jecnico">Tecnico</option>
+            <option value="jefe_de_departamento">Jefe de departamento</option>
+            <option value="redes">Ingeniero de redes</option>
+        </select><br><br>
+        
+        <input type="submit" value="Guardar Cambios">
     </form>
 </body>
 </html>
