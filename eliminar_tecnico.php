@@ -5,7 +5,7 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $sql_eliminar = "DELETE FROM tecnicos WHERE id = $id";
     if ($conexion->query($sql_eliminar) === TRUE) {
-        header("Location: index.php");
+        header("Location: lista_tecnico.php");
     } else {
         echo "Error al eliminar: " . $conexion->error . "<br><br>";
     }

@@ -33,28 +33,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                    WHERE id = $id";
 
     if ($conexion->query($sql_update) === TRUE) {
-        header("Location: index.php");
+        header("Location: lista_tecnico.php");
         exit();
     } else {
         die("Error al actualizar: " . $conexion->error);
     }
 }
+
 ?>
 
 <?php include "header.php"; ?>
-    <?php include "menu.html"; ?>
-    <h2>Editar Técnico</h2>
-    <form action="" method="POST">
-        Nombre: <input type="text" name="nombre" value="<?php echo htmlspecialchars($tecnico['nombre']); ?>" required><br><br>
-        Apellido: <input type="text" name="apellido" value="<?php echo htmlspecialchars($tecnico['apellido']); ?>" required><br><br>
-        Cédula: <input type="number" name="cedula" value="<?php echo $tecnico['cedula']; ?>" required><br><br>
-        Cargo: <select name="cargo" id="">
-            <option value="">Seleccione un cargo</option>
-            <option value="jecnico">Tecnico</option>
-            <option value="jefe_de_departamento">Jefe de departamento</option>
-            <option value="redes">Ingeniero de redes</option>
-        </select><br><br>
-        
-        <input type="submit" value="Guardar Cambios">
+
+    <div class="bg-white p-12 rounded-xl w-3/4 mx-auto">
+        <h2 class="text-center uppercase text-xl font-bold mb-4">Editar Técnico</h2>
+        <form action="" method="POST">
+        <div class="flex gap-4">
+            <div class="flex flex-col mb-4 w-1/2">
+        <label class="text-sm font-bold">Nombre</label>
+        <input type="text" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="nombre" value="<?php echo htmlspecialchars($tecnico['nombre']); ?>" required>
+        </div>
+        <div class="flex flex-col mb-4 w-1/2">
+        <label class="text-sm font-bold">Apellido</label>
+        <input type="text" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="apellido" value="<?php echo htmlspecialchars($tecnico['apellido']); ?>" required>
+        </div>
+        </div>
+        <div class="flex flex-col mb-4">
+        <label class="text-sm font-bold">Cédula</label>
+        <input type="number" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="cedula" value="<?php echo $tecnico['cedula']; ?>" required>
+        </div>
+        <div class="flex flex-col mb-4">
+        <label class="text-sm font-bold">Cargo</label>
+            <select class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="cargo" id="cargo">
+                <option value="">Seleccione un cargo</option>
+                <option value="Tecnico" <?php echo ($tecnico['cargo'] == 'Tecnico') ? 'selected' : ''; ?>>Tecnico</option>
+                <option value="Jefe de departamento" <?php echo ($tecnico['cargo'] == 'Jefe de departamento') ? 'selected' : ''; ?>>Jefe de departamento</option>
+                <option value="Ingeniero de redes" <?php echo ($tecnico['cargo'] == 'Ingeniero de redes') ? 'selected' : ''; ?>>Ingeniero de redes</option>
+            </select><br><br>
+        </div>
+        <div class="flex flex-col mb-4 justify-center">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-xl uppercase font-bold">Guardar Cambios</button>
+            <a href="lista_tecnico.php" class="text-center mt-4 bg-slate-200 px-4 py-2 rounded-xl uppercase font-bold">Cancelar</a>
+        </div>
     </form>
+    </div>
 <?php include "footer.html"; ?>

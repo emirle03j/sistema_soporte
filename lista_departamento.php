@@ -3,7 +3,7 @@ include "header.php";
 ?>
 <h1>Lista de departamentos</h1>
 <a href="crear_departamento.php">Crear departamento</a>
-<table border="1">
+<table >
     <thead>
     <tr>
         <th>ID</th>
