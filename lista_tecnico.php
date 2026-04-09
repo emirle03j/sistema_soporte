@@ -32,7 +32,7 @@ $resultado = $conexion->query("SELECT * FROM tecnicos ORDER BY id DESC");
                 echo "<td class='p-2 text-center'>" . $fila['cedula'] . "</td>";
                 echo "<td class='p-2 text-center'>" . $fila['cargo'] . "</td>";
                 echo "<td class='p-2 text-center'>
-                <button type='button' class='bg-red-500 text-white px-2 py-2 rounded-xl text-xs uppercase font-bold' onclick='eliminarTecnico(" . $fila['id'] . ")'>Eliminar</button>
+                <button type='button' class='bg-red-500 text-white px-2 py-2 rounded-xl text-xs uppercase font-bold' onclick='eliminar(" . $fila['id'] . ", \"eliminar_tecnico.php\", \"¿Está seguro de eliminar el técnico?\")'>Eliminar</button>
                 <a href='editar_tecnico.php?id=" . $fila['id'] . "' class='bg-yellow-500 text-white px-2 py-2 rounded-xl text-xs uppercase font-bold'>Editar</a>
                 </td>";
                 echo "</tr>";
@@ -46,11 +46,5 @@ $resultado = $conexion->query("SELECT * FROM tecnicos ORDER BY id DESC");
     </table>
 
  <?php include "footer.html"; ?>
-<script>
-    function eliminarTecnico(id) {
-        if (confirm("¿Está seguro de eliminar el técnico?")) {
-            window.location.href = "eliminar_tecnico.php?id=" + id;
-        }
-    }
-</script>
+<script src="confirmar.js"></script>
 </html>
