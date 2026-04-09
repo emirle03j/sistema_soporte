@@ -1,21 +1,6 @@
 <?php
 include "conexion.php";
 
-if (isset($_GET['enviar'])) {
-    $nombre = $_GET['nombre'];
-    $apellido = $_GET['apellido'];
-    $cedula = $_GET['cedula'];
-    $cargo = $_GET['cargo'];
-
-    $sql_insertar = "INSERT INTO tecnicos (nombre, apellido, cedula, cargo) 
-    VALUES ('$nombre', '$apellido', '$cedula', '$cargo')";
-    
-    if ($conexion->query($sql_insertar) === TRUE) {
-        echo "Técnico agregado correctamente.<br><br>";
-    } else {
-        echo "Error al agregar: " . $conexion->error . "<br><br>";
-    }
-}
 $resultado = $conexion->query("SELECT * FROM tecnicos ORDER BY id DESC");
 ?>
     <?php include "header.php"; ?>

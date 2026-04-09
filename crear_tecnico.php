@@ -39,10 +39,10 @@ $resultado = $conexion->query("SELECT * FROM tecnicos ORDER BY id DESC");
     </div>
     <div class="flex flex-col mb-4">
         <label class="text-sm font-bold">Cargo</label>
-        <select name="cargo" id="" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2">
+        <select name="cargo" id="" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" required>
             <option value="">Seleccione un cargo</option>
             <option value="tecnico">Tecnico</option>
-            <option value="jefe_de_departamento">Jefe de departamento</option>
+            <option value="jefe de departamento">Jefe de departamento</option>
             <option value="redes">Ingeniero de redes</option>
         </select>
             <br><br>

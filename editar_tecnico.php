@@ -1,14 +1,12 @@
 <?php
 include "conexion.php";
 
-// 1. Validar que el ID exista al cargar la página
 if (!isset($_GET["id"])) {
     die("No se proporcionó un ID válido.");
 }
 
 $id = $_GET["id"];
 
-// 2. Obtener los datos actuales del técnico (Usando MySQLi simple)
 $resultado = $conexion->query("SELECT * FROM tecnicos WHERE id = $id");
 $tecnico = $resultado->fetch_assoc();
 
@@ -54,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="flex flex-col mb-4 w-1/2">
         <label class="text-sm font-bold">Apellido</label>
-        <input type="text" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="apellido" value="<?php echo htmlspecialchars($tecnico['apellido']); ?>" required>
+        <input type="text" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="apellido" value="<?php echo htmlspecialchars($tecnico['apellido']); ?>"required>
         </div>
         </div>
         <div class="flex flex-col mb-4">
@@ -63,12 +61,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="flex flex-col mb-4">
         <label class="text-sm font-bold">Cargo</label>
-            <select class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="cargo" id="cargo">
+            <select class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="cargo" id="cargo" required>
                 <option value="">Seleccione un cargo</option>
-                <option value="Tecnico" <?php echo ($tecnico['cargo'] == 'Tecnico') ? 'selected' : ''; ?>>Tecnico</option>
-                <option value="Jefe de departamento" <?php echo ($tecnico['cargo'] == 'Jefe de departamento') ? 'selected' : ''; ?>>Jefe de departamento</option>
-                <option value="Ingeniero de redes" <?php echo ($tecnico['cargo'] == 'Ingeniero de redes') ? 'selected' : ''; ?>>Ingeniero de redes</option>
-            </select><br><br>
+                <option value="tecnico" <?php echo ($tecnico['cargo'] == 'tecnico') ? 'selected' : ''; ?>>Tecnico</option>
+                <option value="jefe de departamento" <?php echo ($tecnico['cargo'] == 'jefe de departamento') ? 'selected' : ''; ?>>Jefe de departamento</option>
+                <option value="redes" <?php echo ($tecnico['cargo'] == 'redes') ? 'selected' : ''; ?>>Ingeniero de redes</option>
+            </select>
         </div>
         <div class="flex flex-col mb-4 justify-center">
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-xl uppercase font-bold">Guardar Cambios</button>
