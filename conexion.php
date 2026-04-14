@@ -46,4 +46,17 @@ if ($conexion->query($sql_soportes)) {
 } else {
     die("Error al crear la tabla 'soportes': " . $conexion->error);
 }
+
+// 4. Tabla Usuarios
+$sql_usuarios = "CREATE TABLE IF NOT EXISTS usuarios (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    usuario VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL
+) ENGINE=InnoDB;";
+$conexion->query($sql_usuarios);
+    
+if ($conexion->query($sql_usuarios)) {
+} else {
+    die("Error al crear la tabla 'usuarios': " . $conexion->error);
+}
 ?>

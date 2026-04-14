@@ -66,15 +66,6 @@ $resultado_departamento = $conexion->query("SELECT * FROM departamentos ORDER BY
         <label class="text-sm font-bold">Descripción</label>
         <input type="text" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="descripcion" required>
     </div>
-    <div class="flex flex-col mb-4">
-        <label class="text-sm font-bold">Estado</label>
-        <select name="estado" id="" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" required>
-            <option value="">Seleccione un estado</option>
-            <option value="pendiente">Pendiente</option>
-            <option value="en proceso">En proceso</option>
-            <option value="resuelto">Resuelto</option>
-        </select>
-    </div>
     <div class="flex flex-col gap-4">
         <button type="submit" name="enviar" value="Guardar Soporte" class="bg-blue-500 text-white px-4 py-2 rounded-xl uppercase font-bold">Guardar Soporte</button>
         <a href="lista_soporte.php" class="text-center bg-slate-200 px-4 py-2 rounded-xl uppercase font-bold">Cancelar</a>
