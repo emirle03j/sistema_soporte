@@ -4,13 +4,19 @@ $usuario = "root";
 $password = "";
 $db = "sistema_soporte";
 
-$conexion = new mysqli($servidor, $usuario, $password, $db);
+$conexion = new mysqli($servidor, $usuario, $password);
 
 if ($conexion->connect_error) {
     die("Error, conexión fallida: " . $conexion->connect_error);
 }
 
-// 1. Tabla Técnicos
+$sql_db = "CREATE DATABASE IF NOT EXISTS $db";
+if ($conexion->query($sql_db) === TRUE) {
+    $conexion->select_db($db);
+} else {
+    die("Error al crear la base de datos: " . $conexion->error);
+}
+
 $sql_tecnicos = "CREATE TABLE IF NOT EXISTS tecnicos (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -20,7 +26,6 @@ $sql_tecnicos = "CREATE TABLE IF NOT EXISTS tecnicos (
 ) ENGINE=InnoDB;";
 $conexion->query($sql_tecnicos);
 
-// 2. Tabla Departamentos
 $sql_deptos = "CREATE TABLE IF NOT EXISTS departamentos (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) UNIQUE NOT NULL,
@@ -28,7 +33,6 @@ $sql_deptos = "CREATE TABLE IF NOT EXISTS departamentos (
 ) ENGINE=InnoDB;";
 $conexion->query($sql_deptos);
 
-// 3. Tabla Soportes (Sin historial, solo la principal)
 $sql_soportes = "CREATE TABLE IF NOT EXISTS soportes (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
     asunto VARCHAR(255) NOT NULL,
@@ -37,25 +41,38 @@ $sql_soportes = "CREATE TABLE IF NOT EXISTS soportes (
     id_departamento INT(11),
     pc_descripcion VARCHAR(255),
     fecha_soporte DATETIME DEFAULT CURRENT_TIMESTAMP,
-    -- Estas líneas crean la unión con las otras tablas
+    estado VARCHAR(50) DEFAULT 'Pendiente',
     CONSTRAINT fk_tecnico FOREIGN KEY (id_tecnico) REFERENCES tecnicos(id) ON DELETE SET NULL,
     CONSTRAINT fk_departamento FOREIGN KEY (id_departamento) REFERENCES departamentos(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;";
 
 if ($conexion->query($sql_soportes)) {
+    $res_estado = $conexion->query("SHOW COLUMNS FROM soportes LIKE 'estado'");
+    if ($res_estado->num_rows == 0) {
+        $conexion->query("ALTER TABLE soportes ADD COLUMN estado VARCHAR(50) DEFAULT 'Pendiente'");
+    }
+
+    $res_fecha = $conexion->query("SHOW COLUMNS FROM soportes LIKE 'fecha_soporte'");
+    if ($res_fecha->num_rows == 0) {
+        $conexion->query("ALTER TABLE soportes ADD COLUMN fecha_soporte DATETIME DEFAULT CURRENT_TIMESTAMP");
+    }
 } else {
     die("Error al crear la tabla 'soportes': " . $conexion->error);
 }
 
-// 4. Tabla Usuarios
 $sql_usuarios = "CREATE TABLE IF NOT EXISTS usuarios (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
     usuario VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(100) NOT NULL
+    password VARCHAR(100) NOT NULL,
+    pregunta_seguridad VARCHAR(255),
+    respuesta_seguridad VARCHAR(255)
 ) ENGINE=InnoDB;";
-$conexion->query($sql_usuarios);
-    
+
 if ($conexion->query($sql_usuarios)) {
+    $res = $conexion->query("SHOW COLUMNS FROM usuarios LIKE 'pregunta_seguridad'");
+    if ($res->num_rows == 0) {
+        $conexion->query("ALTER TABLE usuarios ADD COLUMN pregunta_seguridad VARCHAR(255), ADD COLUMN respuesta_seguridad VARCHAR(255)");
+    }
 } else {
     die("Error al crear la tabla 'usuarios': " . $conexion->error);
 }

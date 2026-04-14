@@ -32,10 +32,18 @@ while($row = $tecnicos_cargo->fetch_assoc()){
     $labels_cargo[] = $row['cargo'];
     $data_cargo[] = $row['total'];
 }
+
+
+$soportes_estado = $conexion->query("SELECT estado, COUNT(*) as total FROM soportes GROUP BY estado");
+$labels_estado = [];
+$data_estado = [];
+while($row = $soportes_estado->fetch_assoc()){
+    $labels_estado[] = $row['estado'];
+    $data_estado[] = $row['total'];
+}
 ?>
 
-<div class="container mx-auto w-full px-4">
-    <!-- Tarjetas de Estadísticas -->
+<div class="container mx-auto w-full px-4 mb-12">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
             <h2 class="text-slate-500 text-xs uppercase font-bold tracking-wider mb-2">Total Departamentos</h2>
@@ -55,15 +63,33 @@ while($row = $tecnicos_cargo->fetch_assoc()){
         </div>
     </div>  
 
-    <!-- Gráficos -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-            <h3 class="text-lg font-bold text-slate-800 mb-6">Soportes por Departamento</h3>
-            <canvas id="chartSoportes"></canvas>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-2">
+            <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                <span class="w-1.5 h-6 bg-blue-500 rounded-full"></span>
+                Soportes por Departamento
+            </h3>
+            <div class="h-[300px]">
+                <canvas id="chartSoportes"></canvas>
+            </div>
         </div>
-        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-            <h3 class="text-lg font-bold text-slate-800 mb-6">Distribución de Técnicos por Cargo</h3>
-            <div class="max-w-[300px] mx-auto">
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                <span class="w-1.5 h-6 bg-purple-500 rounded-full"></span>
+                Soportes por Estado
+            </h3>
+            <div class="max-w-[250px] mx-auto">
+                <canvas id="chartEstados"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-3">
+             <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                <span class="w-1.5 h-6 bg-green-500 rounded-full"></span>
+                Distribución de Técnicos por Cargo
+            </h3>
+            <div class="h-[200px]">
                 <canvas id="chartTecnicos"></canvas>
             </div>
         </div>
@@ -78,49 +104,71 @@ while($row = $tecnicos_cargo->fetch_assoc()){
         data: {
             labels: <?php echo json_encode($labels_depto); ?>,
             datasets: [{
-                label: 'Cantidad de Soportes',
+                label: 'Cantidad',
                 data: <?php echo json_encode($data_depto); ?>,
-                backgroundColor: 'rgba(59, 130, 246, 0.5)',
-                borderColor: 'rgb(59, 130, 246)',
-                borderWidth: 2,
-                borderRadius: 8
+                backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                borderRadius: 12,
+                barThickness: 30
+            }]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, grid: { borderDash: [5, 5] } }, x: { grid: { display: false } } }
+        }
+    });
+
+    const ctxEstados = document.getElementById('chartEstados').getContext('2d');
+    const dataEstados = <?php echo json_encode($data_estado); ?>;
+    const labelsEstados = <?php echo json_encode($labels_estado); ?>;
+    
+    const colorMap = {
+        'Pendiente': '#f85555ff', 
+        'En Proceso': '#3b82f6', 
+        'Resuelto': '#0abe64ff'   
+    };
+    const colors = labelsEstados.map(label => colorMap[label] || '#cbd5e1');
+
+    new Chart(ctxEstados, {
+        type: 'doughnut',
+        data: {
+            labels: labelsEstados,
+            datasets: [{
+                data: dataEstados,
+                backgroundColor: colors,
+                borderWidth: 0,
+                hoverOffset: 10
             }]
         },
         options: {
             responsive: true,
             plugins: {
-                legend: { display: false }
+                legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
             },
-            scales: {
-                y: { beginAtZero: true, grid: { display: false } },
-                x: { grid: { display: false } }
-            }
+            cutout: '65%'
         }
     });
 
+    // Gráfico de Línea/Barras horizontal para Técnicos
     const ctxTecnicos = document.getElementById('chartTecnicos').getContext('2d');
     new Chart(ctxTecnicos, {
-        type: 'doughnut',
+        type: 'bar',
         data: {
             labels: <?php echo json_encode($labels_cargo); ?>,
             datasets: [{
                 data: <?php echo json_encode($data_cargo); ?>,
-                backgroundColor: [
-                    'rgba(59, 130, 246, 0.8)',
-                    'rgba(16, 185, 129, 0.8)',
-                    'rgba(139, 92, 246, 0.8)',
-                    'rgba(245, 158, 11, 0.8)',
-                    'rgba(239, 68, 68, 0.8)'
-                ],
-                borderWidth: 0
+                backgroundColor: '#10b981',
+                borderRadius: 50,
+                barThickness: 20
             }]
         },
         options: {
+            indexAxis: 'y',
             responsive: true,
-            plugins: {
-                legend: { position: 'bottom' }
-            },
-            cutout: '70%'
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } }
         }
     });
 </script>

@@ -7,9 +7,10 @@ if (isset($_GET['enviar'])) {
     $pc_descripcion = $_GET['pc_descripcion'];
     $asunto = $_GET['asunto'];
     $descripcion = $_GET['descripcion'];
+    $estado = $_GET['estado'];
 
-    $sql_insertar = "INSERT INTO soportes (id_tecnico, id_departamento, pc_descripcion, asunto, descripcion) 
-    VALUES ('$id_tecnico', '$id_departamento', '$pc_descripcion', '$asunto', '$descripcion')";
+    $sql_insertar = "INSERT INTO soportes (id_tecnico, id_departamento, pc_descripcion, asunto, descripcion, estado) 
+    VALUES ('$id_tecnico', '$id_departamento', '$pc_descripcion', '$asunto', '$descripcion', '$estado')";
     
     if ($conexion->query($sql_insertar) === TRUE) {
         header("Location: lista_soporte.php");
@@ -58,13 +59,20 @@ $resultado_departamento = $conexion->query("SELECT * FROM departamentos ORDER BY
             <option value="Soporte de software">Soporte de software</option>
             <option value="Soporte de hardware">Soporte de hardware</option>
             <option value="Soporte de impresora">Soporte de impresora</option>
-            <option value="Internet">Internet</option>
             
         </select>
     </div>
     <div class="flex flex-col mb-4">
         <label class="text-sm font-bold">Descripción</label>
         <input type="text" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="descripcion" required>
+    </div>
+    <div class="flex flex-col mb-4">
+        <label class="text-sm font-bold">Estado</label>
+        <select name="estado" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" required>
+            <option value="Pendiente" selected>Pendiente</option>
+            <option value="En Proceso">En Proceso</option>
+            <option value="Resuelto">Resuelto</option>
+        </select>
     </div>
     <div class="flex flex-col gap-4">
         <button type="submit" name="enviar" value="Guardar Soporte" class="bg-blue-500 text-white px-4 py-2 rounded-xl uppercase font-bold">Guardar Soporte</button>

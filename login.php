@@ -31,8 +31,11 @@ if (isset($_POST['enviar'])) {
                 <input type="password" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="password" required>
             </div>
             <div class="flex flex-col gap-4">
-                <button type="submit" name="enviar" value="Iniciar Sesión" class="bg-blue-500 text-white px-4 py-2 rounded-xl uppercase font-bold">Iniciar Sesión</button>
-                <a href="lista_soporte.php" class="text-center bg-slate-200 px-4 py-2 rounded-xl uppercase font-bold">Cancelar</a>
+                <button type="submit" name="enviar" value="Iniciar Sesion" class="bg-blue-500 text-white px-4 py-2 rounded-xl uppercase font-bold">Iniciar Sesion</button>
+                <div class="flex justify-between items-center text-sm">
+                    <a href="registro_usuario.php" class="text-blue-600 hover:underline">Registrar Usuario</a>
+                    <a href="recuperar.php" class="text-slate-500 hover:text-blue-600 transition-colors">¿Olvidaste tu contraseña?</a>
+                </div>
             </div>
         </form>
     </div>

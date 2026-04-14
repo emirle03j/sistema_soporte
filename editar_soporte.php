@@ -16,13 +16,15 @@ if (isset($_POST["enviar"])) {
     $id_tecnico = $_POST["id_tecnico"];
     $id_departamento = $_POST["id_departamento"];
     $pc_descripcion = $_POST["pc_descripcion"];
+    $estado = $_POST["estado"];
     
     $sql_update = "UPDATE soportes SET 
                    asunto = '$asunto', 
-                   descripcion = '$descripcion', 
-                   id_tecnico = '$id_tecnico', 
-                   id_departamento = '$id_departamento', 
-                   pc_descripcion = '$pc_descripcion' 
+                    descripcion = '$descripcion', 
+                    id_tecnico = '$id_tecnico', 
+                    id_departamento = '$id_departamento', 
+                    pc_descripcion = '$pc_descripcion',
+                    estado = '$estado' 
                    WHERE id = $id";
     if ($conexion->query($sql_update) === TRUE) {
         header("Location: lista_soporte.php");
@@ -73,12 +75,19 @@ $resultado_departamento = $conexion->query("SELECT * FROM departamentos ORDER BY
                 <option value="Soporte de software" <?php echo ($soporte['asunto'] == 'Soporte de software') ? 'selected' : ''; ?>>Soporte de software</option>
                 <option value="Soporte de hardware" <?php echo ($soporte['asunto'] == 'Soporte de hardware') ? 'selected' : ''; ?>>Soporte de hardware</option>
                 <option value="Soporte de impresora" <?php echo ($soporte['asunto'] == 'Soporte de impresora') ? 'selected' : ''; ?>>Soporte de impresora</option>
-                <option value="Internet" <?php echo ($soporte['asunto'] == 'Internet') ? 'selected' : ''; ?>>Internet</option>
             </select>
         </div>
         <div class="flex flex-col mb-4">
         <label class="text-sm font-bold">Descripción</label>
         <input type="text" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" name="descripcion" value="<?php echo $soporte['descripcion']; ?>" required>
+        </div>
+        <div class="flex flex-col mb-4">
+            <label class="text-sm font-bold">Estado</label>
+            <select name="estado" class="border bg-slate-200/20 border-gray-400 rounded-xl p-2 mt-2" required>
+                <option value="Pendiente" <?php echo ($soporte['estado'] == 'Pendiente') ? 'selected' : ''; ?>>Pendiente</option>
+                <option value="En Proceso" <?php echo ($soporte['estado'] == 'En Proceso') ? 'selected' : ''; ?>>En Proceso</option>
+                <option value="Resuelto" <?php echo ($soporte['estado'] == 'Resuelto') ? 'selected' : ''; ?>>Resuelto</option>
+            </select>
         </div>
         <div class="flex flex-col mb-4 justify-center">
             <button type="submit" name="enviar" class="bg-blue-500 text-white px-4 py-2 rounded-xl uppercase font-bold">Guardar Cambios</button>

@@ -15,14 +15,12 @@ if (!$tecnico) {
     die(" Técnico no encontrado en la base de datos.");
 }
 
-// 3. Procesar la actualización al recibir el POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $_POST["nombre"];
     $apellido = $_POST["apellido"];
     $cedula = $_POST["cedula"];
     $cargo = $_POST["cargo"];
 
-    // Actualizar los datos con una consulta simple
     $sql_update = "UPDATE tecnicos SET 
                    nombre = '$nombre', 
                    apellido = '$apellido', 
