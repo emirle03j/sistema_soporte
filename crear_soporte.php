@@ -1,31 +1,53 @@
 <?php
+include "header.php";
 include "conexion.php";
 
 if (isset($_GET['enviar'])) {
-    $id_tecnico = $_GET['id_tecnico'];
-    $id_departamento = $_GET['id_departamento'];
-    $pc_descripcion = $_GET['pc_descripcion'];
-    $asunto = $_GET['asunto'];
-    $descripcion = $_GET['descripcion'];
-    $estado = $_GET['estado'];
+    $id_tecnico = $conexion->real_escape_string($_GET['id_tecnico']);
+    $id_departamento = $conexion->real_escape_string($_GET['id_departamento']);
+    $pc_descripcion = $conexion->real_escape_string($_GET['pc_descripcion']);
+    $asunto = $conexion->real_escape_string($_GET['asunto']);
+    $descripcion = $conexion->real_escape_string($_GET['descripcion']);
+    $estado = $conexion->real_escape_string($_GET['estado']);
 
-    $sql_insertar = "INSERT INTO soportes (id_tecnico, id_departamento, pc_descripcion, asunto, descripcion, estado) 
-    VALUES ('$id_tecnico', '$id_departamento', '$pc_descripcion', '$asunto', '$descripcion', '$estado')";
+    // Verificar si existe un soporte idéntico reciente
+    $verificar = $conexion->query("SELECT id FROM soportes 
+                                   WHERE asunto = '$asunto' 
+                                   AND id_departamento = '$id_departamento' 
+                                   AND descripcion = '$descripcion'
+                                   AND estado = 'Pendiente'");
     
-    if ($conexion->query($sql_insertar) === TRUE) {
-        header("Location: lista_soporte.php");
+    if ($verificar->num_rows > 0) {
+        $error_soporte = "Atención: Ya existe un soporte pendiente con el mismo asunto y descripción para este departamento.";
     } else {
-        echo "Error al agregar: " . $conexion->error . "<br><br>";
+        $sql_insertar = "INSERT INTO soportes (id_tecnico, id_departamento, pc_descripcion, asunto, descripcion, estado) 
+        VALUES ('$id_tecnico', '$id_departamento', '$pc_descripcion', '$asunto', '$descripcion', '$estado')";
+        
+        if ($conexion->query($sql_insertar) === TRUE) {
+            header("Location: lista_soporte.php");
+            exit();
+        } else {
+            $error_soporte = "Error al agregar: " . $conexion->error;
+        }
     }
 }
 $resultado_tecnico = $conexion->query("SELECT * FROM tecnicos ORDER BY id DESC");
 $resultado_departamento = $conexion->query("SELECT * FROM departamentos ORDER BY id DESC");
 ?>
 
-<?php include "header.php"; ?>
 
-<div class="bg-white p-12 rounded-xl w-3/4 mx-auto">
-    <h2 class="text-center uppercase text-xl font-bold mb-4">Crear Soporte</h2>
+
+<div class="bg-white p-12 rounded-xl w-3/4 mx-auto shadow-sm border border-slate-100">
+    <h2 class="text-center uppercase text-xl font-bold mb-6 text-slate-800">Crear Soporte</h2>
+    
+    <?php if(isset($error_soporte)): ?>
+        <div class="bg-yellow-50 text-yellow-700 p-4 rounded-xl mb-6 text-sm font-bold border border-yellow-200 flex items-center gap-2 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            <?php echo $error_soporte; ?>
+        </div>
+    <?php endif; ?>
     <form action="" method="GET">
     <div class="flex gap-4">
         <div class="flex flex-col   mb-4 w-1/2">
