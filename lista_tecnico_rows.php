@@ -7,8 +7,8 @@ if ($resultado->num_rows > 0) {
         echo "<td class='p-4 text-slate-600 text-sm'>" . htmlspecialchars($fila['cedula']) . "</td>";
         echo "<td class='p-4 text-slate-600 text-sm'><span class='inline-block px-2 py-1 bg-slate-100 rounded text-xs'>" . htmlspecialchars($fila['cargo']) . "</span></td>";
         echo "<td class='p-4 text-center space-x-2'>
-        <a href='editar_tecnico.php?id=" . $fila['id'] . "' class='bg-yellow-100 text-yellow-700 px-3 py-1.5 rounded-lg text-xs uppercase font-bold hover:bg-yellow-200 transition-colors inline-block'>Editar</a>
-        <button type='button' class='bg-red-100 text-red-700 px-3 py-1.5 rounded-lg text-xs uppercase font-bold hover:bg-red-200 transition-colors' onclick='eliminar(" . $fila['id'] . ", \"eliminar_tecnico.php\", \"¿Está seguro de eliminar el técnico?\")'>Borrar</button>
+        <a href='editar_tecnico.php?id=" . $fila['id'] . "&ref=" . urlencode($current_ui_url) . "' class='bg-yellow-100 text-yellow-700 px-3 py-1.5 rounded-lg text-xs uppercase font-bold hover:bg-yellow-200 transition-colors inline-block'>Editar</a>
+        <button type='button' class='bg-red-100 text-red-700 px-3 py-1.5 rounded-lg text-xs uppercase font-bold hover:bg-red-200 transition-colors' onclick='eliminar(" . $fila['id'] . ", \"eliminar_tecnico.php\", \"¿Está seguro de eliminar el técnico?\", \"" . addslashes($current_ui_url) . "\")'>Borrar</button>
         </td>";
         echo "</tr>";
     }

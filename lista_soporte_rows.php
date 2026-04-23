@@ -17,8 +17,8 @@ if ($resultado->num_rows > 0) {
         echo "<td class='p-4 text-center'><span class='px-3 py-1 rounded-full text-[10px] font-black uppercase " . $estado_class . "'>" . $fila['estado'] . "</span></td>";
         echo "<td class='p-4 text-slate-500 text-xs'>" . date('d/m/Y H:i', strtotime($fila['fecha_soporte'])) . "</td>";
         echo "<td class='p-4 text-center space-x-2'>
-        <a href='editar_soporte.php?id=" . $fila['id'] . "' class='bg-yellow-100 text-yellow-700 px-3 py-1.5 rounded-lg text-xs uppercase font-bold hover:bg-yellow-200 transition-colors inline-block'>Editar</a>
-        <button type='button' class='bg-red-100 text-red-700 px-3 py-1.5 rounded-lg text-xs uppercase font-bold hover:bg-red-200 transition-colors' onclick='eliminar(" . $fila['id'] . ", \"eliminar_soporte.php\", \"¿Está seguro de eliminar el soporte?\")'>Borrar</button>
+        <a href='editar_soporte.php?id=" . $fila['id'] . "&ref=" . urlencode($current_ui_url) . "' class='bg-yellow-100 text-yellow-700 px-3 py-1.5 rounded-lg text-xs uppercase font-bold hover:bg-yellow-200 transition-colors inline-block'>Editar</a>
+        <button type='button' class='bg-red-100 text-red-700 px-3 py-1.5 rounded-lg text-xs uppercase font-bold hover:bg-red-200 transition-colors' onclick='eliminar(" . $fila['id'] . ", \"eliminar_soporte.php\", \"¿Está seguro de eliminar el soporte?\", \"" . addslashes($current_ui_url) . "\")'>Borrar</button>
         </td>";
         echo "</tr>";
     }

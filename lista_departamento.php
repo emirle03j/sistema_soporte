@@ -18,6 +18,8 @@ $total_paginas = ceil($total_registros / $items_por_pagina);
 $sql = "SELECT * FROM departamentos $where ORDER BY id DESC LIMIT $items_por_pagina OFFSET $offset";
 $resultado = $conexion->query($sql);
 
+$current_ui_url = "lista_departamento.php?" . http_build_query(['p' => $p_actual, 'q' => $busqueda]);
+
 function renderDePagination($p_actual, $total_paginas, $busqueda) {
     if ($total_paginas <= 1) return '';
     ob_start(); ?>
@@ -120,9 +122,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const tableBody = document.getElementById('tabla-departamentos');
     const paginationContainer = document.getElementById('contenedor-paginacion');
 
-    function actualizarTabla(pagina = 1) {
+    window.addEventListener('popstate', function() {
+        const params = new URLSearchParams(window.location.search);
+        searchInput.value = params.get('q') || '';
+        actualizarTabla(params.get('p') || 1, false);
+    });
+
+    function actualizarTabla(pagina = 1, push = true) {
         const busqueda = searchInput.value;
         const url = `lista_departamento.php?ajax=1&p=${pagina}&q=${encodeURIComponent(busqueda)}`;
+        
+        tableBody.style.opacity = '0.5';
         
         fetch(url)
             .then(response => response.text())
@@ -130,13 +140,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 const parts = data.split('<!-- PAGINATION_SPLIT -->');
                 tableBody.innerHTML = parts[0];
                 paginationContainer.innerHTML = parts[1];
+                tableBody.style.opacity = '1';
                 
-                const newUrl = `?p=${pagina}&q=${encodeURIComponent(busqueda)}`;
-                window.history.pushState({path:newUrl},'',newUrl);
+                if (push) {
+                    const newUrl = `?p=${pagina}&q=${encodeURIComponent(busqueda)}`;
+                    window.history.pushState({p: pagina, q: busqueda}, '', newUrl);
+                }
                 
                 vincularPaginacion();
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                tableBody.style.opacity = '1';
+            });
     }
 
     function vincularPaginacion() {

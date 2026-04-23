@@ -5,6 +5,7 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $resultado = $conexion->query("SELECT * FROM soportes WHERE id = $id");
     $soporte = $resultado->fetch_assoc();
+    $ref = isset($_GET['ref']) ? $_GET['ref'] : 'lista_soporte.php';
     if (!$soporte) {
         die("Soporte no encontrado.");
     }
@@ -38,7 +39,8 @@ if (isset($_POST["enviar"])) {
                         estado = '$estado' 
                        WHERE id = $id";
         if ($conexion->query($sql_update) === TRUE) {
-            header("Location: lista_soporte.php");
+            $ref = isset($_POST['ref']) ? $_POST['ref'] : 'lista_soporte.php';
+            header("Location: " . $ref);
             exit();
         } else {
             $error_soporte = "Error al actualizar: " . $conexion->error;
@@ -64,6 +66,7 @@ $resultado_departamento = $conexion->query("SELECT * FROM departamentos ORDER BY
     <?php endif; ?>
         <form action="" method="POST">
             <input type="hidden" name="id" value="<?php echo $soporte['id']; ?>">
+            <input type="hidden" name="ref" value="<?php echo htmlspecialchars($ref); ?>">
         <div class="flex gap-4">
             <div class="flex flex-col mb-4 w-1/2">
         <label class="text-sm font-bold">Tecnico</label>
@@ -112,7 +115,7 @@ $resultado_departamento = $conexion->query("SELECT * FROM departamentos ORDER BY
         </div>
         <div class="flex flex-col mb-4 justify-center">
             <button type="submit" name="enviar" class="bg-blue-500 text-white px-4 py-2 rounded-xl uppercase font-bold">Guardar Cambios</button>
-            <a href="lista_soporte.php" class="text-center mt-4 bg-slate-200 px-4 py-2 rounded-xl uppercase font-bold">Cancelar</a>
+            <a href="<?php echo htmlspecialchars($ref); ?>" class="text-center mt-4 bg-slate-200 px-4 py-2 rounded-xl uppercase font-bold">Cancelar</a>
         </div>
     </form>
     </div>

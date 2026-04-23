@@ -1,5 +1,9 @@
-function eliminar(id, url, mensaje) {
+function eliminar(id, url, mensaje, returnUrl = '') {
     if (confirm(mensaje)) {
-        window.location.href = url + "?id=" + id;
+        let finalUrl = url + "?id=" + id;
+        if (returnUrl) {
+            finalUrl += "&returnUrl=" + encodeURIComponent(returnUrl);
+        }
+        window.location.href = finalUrl;
     }
 }

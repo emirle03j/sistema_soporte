@@ -5,7 +5,8 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $sql_eliminar = "DELETE FROM soportes WHERE id = $id";
     if ($conexion->query($sql_eliminar) === TRUE) {
-        header("Location: lista_soporte.php");
+        $returnUrl = isset($_GET['returnUrl']) ? $_GET['returnUrl'] : 'lista_soporte.php';
+        header("Location: " . $returnUrl);
     } else {
         echo "Error al eliminar: " . $conexion->error . "<br><br>";
     }
