@@ -8,7 +8,6 @@ $mensaje = "";
 $pregunta = "";
 $usuario_recuperar = "";
 
-// Paso 1: Verificar el nombre de usuario
 if (isset($_POST['verificar_usuario'])) {
     $usuario_recuperar = $conexion->real_escape_string($_POST['usuario']);
     $resultado = $conexion->query("SELECT pregunta_seguridad FROM usuarios WHERE usuario = '$usuario_recuperar'");
@@ -27,7 +26,6 @@ if (isset($_POST['verificar_usuario'])) {
     }
 }
 
-// Paso 2: Verificar la respuesta
 if (isset($_POST['verificar_respuesta'])) {
     $usuario_recuperar = $_SESSION['usuario_recuperar'];
     $respuesta_ingresada = $conexion->real_escape_string($_POST['respuesta']);
@@ -38,17 +36,15 @@ if (isset($_POST['verificar_respuesta'])) {
         $paso = 3;
     } else {
         $error = "La respuesta es incorrecta.";
-        // Recuperar la pregunta de nuevo para mostrarla en el paso 2
         $res_q = $conexion->query("SELECT pregunta_seguridad FROM usuarios WHERE usuario = '$usuario_recuperar'");
         $pregunta = $res_q->fetch_assoc()['pregunta_seguridad'];
         $paso = 2;
     }
 }
 
-// Paso 3: Cambiar la contraseña
 if (isset($_POST['cambiar_password'])) {
     $usuario_recuperar = $_SESSION['usuario_recuperar'];
-    $nuevo_password = $_POST['nuevo_password']; // En un sistema real deberíamos usar password_hash
+    $nuevo_password = $_POST['nuevo_password'];
     $confirmar_password = $_POST['confirmar_password'];
 
     if ($nuevo_password === $confirmar_password) {

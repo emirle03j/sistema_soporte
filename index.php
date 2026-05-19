@@ -219,7 +219,6 @@ while($row = $soportes_estado->fetch_assoc()){
         }
     });
 
-    // Gráfico de Estados (Doughnut)
     const ctxEstados = document.getElementById('chartEstados').getContext('2d');
     const labelsEstados = <?php echo json_encode($labels_estado); ?>;
     const dataEstados = <?php echo json_encode($data_estado); ?>;
@@ -251,7 +250,6 @@ while($row = $soportes_estado->fetch_assoc()){
         }
     });
 
-    // Gráfico de Técnicos (Horizontal Bar)
     const ctxTecnicos = document.getElementById('chartTecnicos').getContext('2d');
     const gradIndigo = ctxTecnicos.createLinearGradient(0, 0, 400, 0);
     gradIndigo.addColorStop(0, '#4f46e5');
@@ -289,7 +287,6 @@ while($row = $soportes_estado->fetch_assoc()){
         }
     });
 
-    // Leyenda Dinámica Mejorada
     const legendContainer = document.getElementById('chart-legend');
     labelsEstados.forEach((label, i) => {
         const value = dataEstados[i];

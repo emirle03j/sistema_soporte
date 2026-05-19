@@ -23,8 +23,6 @@ if (isset($_POST['enviar'])) {
     $apellido = $conexion->real_escape_string($_POST['apellido']);
     $cedula = $conexion->real_escape_string($_POST['cedula']);
     $cargo = $conexion->real_escape_string($_POST['cargo']);
-
-    // Verificar si la cédula ya existe en otro técnico
     $verificar = $conexion->query("SELECT id FROM tecnicos WHERE cedula = '$cedula' AND id != '$id'");
     
     if ($verificar->num_rows > 0) {
@@ -46,8 +44,7 @@ if (isset($_POST['enviar'])) {
         }
     }
     
-    // Recargar datos actualizados en caso de error para mantener coherencia en el formulario
-    $tecnico = [
+        $tecnico = [
         'id' => $id,
         'nombre' => $nombre,
         'apellido' => $apellido,

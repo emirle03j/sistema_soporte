@@ -20,7 +20,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $conexion->real_escape_string($_POST["nombre"]);
     $ubicacion = $conexion->real_escape_string($_POST["ubicacion"]);
 
-    // Verificar si el departamento ya existe en otro registro
     $verificar = $conexion->query("SELECT id FROM departamentos WHERE nombre = '$nombre' AND id != $id");
     
     if ($verificar->num_rows > 0) {

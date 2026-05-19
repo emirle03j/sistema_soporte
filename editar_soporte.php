@@ -20,7 +20,6 @@ if (isset($_POST["enviar"])) {
     $pc_descripcion = $conexion->real_escape_string($_POST["pc_descripcion"]);
     $estado = $conexion->real_escape_string($_POST["estado"]);
 
-    // Verificar duplicados en otros registros
     $verificar = $conexion->query("SELECT id FROM soportes 
                                    WHERE asunto = '$asunto' 
                                    AND id_departamento = '$id_departamento' 

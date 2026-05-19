@@ -11,7 +11,6 @@ $p_actual = isset($_GET['p']) ? (int)$_GET['p'] : (isset($_GET['pagina']) ? (int
 if ($p_actual < 1) $p_actual = 1;
 $offset = ($p_actual - 1) * $items_por_pagina;
 
-// Construir cláusulas WHERE
 $where_clauses = [];
 if ($busqueda != '') {
     $where_clauses[] = "(soportes.asunto LIKE '%$busqueda%' 
@@ -30,14 +29,12 @@ if (!empty($filtro_estado)) {
 
 $where = count($where_clauses) > 0 ? "WHERE " . implode(" AND ", $where_clauses) : "";
 
-// Obtener total para paginación
 $total_registros = $conexion->query("SELECT COUNT(*) as total FROM soportes 
                                      LEFT JOIN tecnicos ON soportes.id_tecnico = tecnicos.id 
                                      LEFT JOIN departamentos ON soportes.id_departamento = departamentos.id
                                      $where")->fetch_assoc()['total'];
 $total_paginas = ceil($total_registros / $items_por_pagina);
 
-// Consulta principal
 $sql = "SELECT soportes.*, tecnicos.nombre AS tecnico_nombre, departamentos.nombre AS depto_nombre 
         FROM soportes 
         LEFT JOIN tecnicos ON soportes.id_tecnico = tecnicos.id 
@@ -55,7 +52,6 @@ $queryParams = [
 ];
 $current_ui_url = "lista_soporte.php?" . http_build_query($queryParams);
 
-// Función interna para renderizar la paginación (para evitar duplicidad)
 function renderPagination($p_actual, $total_paginas, $busqueda, $filtro_tecnico, $filtro_estado) {
     if ($total_paginas <= 1) return '';
     ob_start(); ?>
@@ -110,7 +106,6 @@ function renderPagination($p_actual, $total_paginas, $busqueda, $filtro_tecnico,
     <?php return ob_get_clean();
 }
 
-// Manejo de AJAX
 if (isset($_GET['ajax'])) {
     include "lista_soporte_rows.php";
     echo "<!-- PAGINATION_SPLIT -->";
@@ -198,7 +193,6 @@ document.addEventListener('DOMContentLoaded', function() {
         tecnicoSelect.value = params.get('tecnico') || '';
         currentEstado = params.get('estado') || '';
         
-        // Actualizar visualmente las pestañas
         estadoTabs.forEach(t => {
             const val = t.getAttribute('data-estado');
             if (val === currentEstado) {
@@ -230,7 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const url = `lista_soporte.php?ajax=1&p=${pagina}&q=${encodeURIComponent(busqueda)}&tecnico=${encodeURIComponent(tecnico)}&estado=${encodeURIComponent(estado)}`;
         
-        // Efecto visual de carga
         tableBody.style.opacity = '0.5';
         
         fetch(url)
@@ -245,12 +238,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const tabsContainer = document.getElementById('contenedor-tabs');
                 if (tabsContainer && subParts[1]) {
                     tabsContainer.innerHTML = subParts[1];
-                    vincularTabs(); // Reasignar eventos a las nuevas pestañas
+                    vincularTabs();
                 }
 
                 tableBody.style.opacity = '1';
                 
-                // Actualizar URL
                 if (push) {
                     const newUrl = `?p=${pagina}&q=${encodeURIComponent(busqueda)}&tecnico=${encodeURIComponent(tecnico)}&estado=${encodeURIComponent(estado)}`;
                     window.history.pushState({p: pagina, q: busqueda, tecnico: tecnico, estado: estado}, '', newUrl);

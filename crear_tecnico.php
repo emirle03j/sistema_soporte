@@ -8,7 +8,6 @@ if (isset($_GET['enviar'])) {
     $cedula = $conexion->real_escape_string($_GET['cedula']);
     $cargo = $_GET['cargo'];
 
-    // Verificar si la cédula ya existe
     $verificar = $conexion->query("SELECT id FROM tecnicos WHERE cedula = '$cedula'");
     
     if ($verificar->num_rows > 0) {

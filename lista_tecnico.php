@@ -2,20 +2,17 @@
 include "conexion.php";
 include "auth_check.php";
 
-// Configuración de búsqueda y paginación
 $busqueda = isset($_GET['q']) ? $conexion->real_escape_string($_GET['q']) : '';
 $items_por_pagina = 7;
 $p_actual = isset($_GET['p']) ? (int)$_GET['p'] : (isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1);
 if ($p_actual < 1) $p_actual = 1;
 $offset = ($p_actual - 1) * $items_por_pagina;
 
-// Construir cláusula WHERE si hay búsqueda
 $where = "";
 if ($busqueda != '') {
     $where = "WHERE nombre LIKE '%$busqueda%' OR apellido LIKE '%$busqueda%' OR cedula LIKE '%$busqueda%' OR cargo LIKE '%$busqueda%'";
 }
 
-// Obtener total de registros para la paginación
 $total_registros = $conexion->query("SELECT COUNT(*) as total FROM tecnicos $where")->fetch_assoc()['total'];
 $total_paginas = ceil($total_registros / $items_por_pagina);
 
@@ -23,7 +20,6 @@ $resultado = $conexion->query("SELECT * FROM tecnicos $where ORDER BY id DESC LI
 
 $current_ui_url = "lista_tecnico.php?" . http_build_query(['p' => $p_actual, 'q' => $busqueda]);
 
-// Función interna para renderizar la paginación
 function renderTePagination($p_actual, $total_paginas, $busqueda) {
     if ($total_paginas <= 1) return '';
     ob_start(); ?>
@@ -69,7 +65,6 @@ function renderTePagination($p_actual, $total_paginas, $busqueda) {
     <?php return ob_get_clean();
 }
 
-// Manejo de AJAX
 if (isset($_GET['ajax'])) {
     include "lista_tecnico_rows.php";
     echo "<!-- PAGINATION_SPLIT -->";

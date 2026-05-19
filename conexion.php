@@ -10,10 +10,8 @@ if ($conexion->connect_error) {
     die("Error, conexión fallida: " . $conexion->connect_error);
 }
 
-// Crear la base de datos si no existe
 $conexion->query("CREATE DATABASE IF NOT EXISTS $db");
 
-// Reconectar con la base de datos seleccionada (esto evita errores de paquetes mal formados)
 $conexion->close();
 $conexion = new mysqli($servidor, $usuario, $password, $db);
 

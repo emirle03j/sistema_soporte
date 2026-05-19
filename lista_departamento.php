@@ -65,7 +65,6 @@ function renderDePagination($p_actual, $total_paginas, $busqueda) {
     <?php return ob_get_clean();
 }
 
-// Manejo de AJAX
 if (isset($_GET['ajax'])) {
     include "lista_departamento_rows.php";
     echo "<!-- PAGINATION_SPLIT -->";
